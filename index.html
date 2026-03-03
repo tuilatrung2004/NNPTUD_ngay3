@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="header-section">
+            <div class="container">
+                <h1 class="text-center mb-0">
+                    <i class="bi bi-shop"></i> Products Dashboard
+                </h1>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="container mt-4">
+            <!-- Search and Controls -->
+            <div class="card control-panel mb-4">
+                <div class="card-body">
+                    <div class="row align-items-end">
+                        <div class="col-md-8">
+                            <label for="searchInput" class="form-label fw-bold">
+                                <i class="bi bi-search"></i> Tìm kiếm theo tên sản phẩm
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control search-input" 
+                                id="searchInput" 
+                                placeholder="Nhập tên sản phẩm..."
+                                onchange="handleSearch()"
+                            >
+                        </div>
+                        <div class="col-md-4">
+                            <label for="limitSelect" class="form-label fw-bold">
+                                <i class="bi bi-list-ol"></i> Số sản phẩm mỗi trang
+                            </label>
+                            <select class="form-select" id="limitSelect" onchange="handleLimitChange()">
+                                <option value="5">5 sản phẩm</option>
+                                <option value="10" selected>10 sản phẩm</option>
+                                <option value="20">20 sản phẩm</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading spinner -->
+            <div id="loadingSpinner" class="text-center my-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Đang tải dữ liệu...</p>
+            </div>
+
+            <!-- Products Table -->
+            <div id="productsContainer" style="display: none;">
+                <div class="card table-card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px;">ID</th>
+                                        <th style="width: 100px;">Hình ảnh</th>
+                                        <th>
+                                            Tên sản phẩm
+                                            <button class="btn btn-sm btn-sort" onclick="sortByTitle()">
+                                                <i class="bi bi-arrow-down-up"></i>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            Giá
+                                            <button class="btn btn-sm btn-sort" onclick="sortByPrice()">
+                                                <i class="bi bi-arrow-down-up"></i>
+                                            </button>
+                                        </th>
+                                        <th>Danh mục</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                    <!-- Products will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Pagination buttons will be inserted here -->
+                    </ul>
+                </nav>
+
+                <!-- Results Info -->
+                <div class="text-center mt-3 mb-5">
+                    <span class="badge bg-info" id="resultsInfo">
+                        <!-- Results count will be shown here -->
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let allProducts = [];
+        let filteredProducts = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let sortDirection = {
+            title: 'asc',
+            price: 'asc'
+        };
+
+        // Fetch products from API
+        async function fetchProducts() {
+            try {
+                const response = await fetch('https://api.escuelajs.co/api/v1/products');
+                const data = await response.json();
+                allProducts = data;
+                filteredProducts = [...allProducts];
+                
+                // Hide loading spinner
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('productsContainer').style.display = 'block';
+                
+                // Render products
+                renderProducts();
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                document.getElementById('loadingSpinner').innerHTML = 
+                    '<div class="alert alert-danger">Không thể tải dữ liệu. Vui lòng thử lại sau.</div>';
+            }
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredProducts = [...allProducts];
+            } else {
+                filteredProducts = allProducts.filter(product => 
+                    product.title.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            currentPage = 1;
+            renderProducts();
+        }
+
+        // Handle limit change
+        function handleLimitChange() {
+            itemsPerPage = parseInt(document.getElementById('limitSelect').value);
+            currentPage = 1;
+            renderProducts();
+        }
+
+        // Sort by title
+        function sortByTitle() {
+            sortDirection.title = sortDirection.title === 'asc' ? 'desc' : 'asc';
+            
+            filteredProducts.sort((a, b) => {
+                if (sortDirection.title === 'asc') {
+                    return a.title.localeCompare(b.title);
+                } else {
+                    return b.title.localeCompare(a.title);
+                }
+            });
+            
+            renderProducts();
+        }
+
+        // Sort by price
+        function sortByPrice() {
+            sortDirection.price = sortDirection.price === 'asc' ? 'desc' : 'asc';
+            
+            filteredProducts.sort((a, b) => {
+                if (sortDirection.price === 'asc') {
+                    return a.price - b.price;
+                } else {
+                    return b.price - a.price;
+                }
+            });
+            
+            renderProducts();
+        }
+
+        // Render products
+        function renderProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '';
+
+            // Calculate pagination
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const displayedProducts = filteredProducts.slice(startIndex, endIndex);
+
+            // Render products
+            displayedProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.className = 'product-row';
+                
+                // Get first image or placeholder
+                const imageUrl = product.images && product.images.length > 0 
+                    ? product.images[0].replace(/["\[\]]/g, '') 
+                    : 'https://via.placeholder.com/100';
+                
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>
+                        <img src="${imageUrl}" alt="${product.title}" class="product-image">
+                    </td>
+                    <td class="product-title">${product.title}</td>
+                    <td class="price-cell">$${product.price}</td>
+                    <td>${product.category ? product.category.name : 'N/A'}</td>
+                `;
+
+                // Add description tooltip
+                row.setAttribute('data-description', product.description || 'Không có mô tả');
+                
+                tbody.appendChild(row);
+            });
+
+            // Update results info
+            document.getElementById('resultsInfo').textContent = 
+                `Hiển thị ${startIndex + 1}-${Math.min(endIndex, filteredProducts.length)} trong tổng số ${filteredProducts.length} sản phẩm`;
+
+            // Render pagination
+            renderPagination(totalPages);
+        }
+
+        // Render pagination
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) {
+                return;
+            }
+
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `
+                <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">
+                    <i class="bi bi-chevron-left"></i> Trước
+                </a>
+            `;
+            pagination.appendChild(prevLi);
+
+            // Page numbers
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (currentPage <= 3) {
+                endPage = Math.min(5, totalPages);
+            }
+            if (currentPage >= totalPages - 2) {
+                startPage = Math.max(1, totalPages - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `
+                    <a class="page-link" href="#" onclick="changePage(${i}); return false;">
+                        ${i}
+                    </a>
+                `;
+                pagination.appendChild(li);
+            }
+
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `
+                <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">
+                    Sau <i class="bi bi-chevron-right"></i>
+                </a>
+            `;
+            pagination.appendChild(nextLi);
+        }
+
+        // Change page
+        function changePage(page) {
+            if (page < 1 || page > Math.ceil(filteredProducts.length / itemsPerPage)) {
+                return;
+            }
+            currentPage = page;
+            renderProducts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchProducts();
+
+            // Add hover effect for description
+            document.addEventListener('mouseover', function(e) {
+                if (e.target.closest('.product-row')) {
+                    const row = e.target.closest('.product-row');
+                    const description = row.getAttribute('data-description');
+                    
+                    // Remove existing tooltip
+                    const existingTooltip = document.querySelector('.description-tooltip');
+                    if (existingTooltip) {
+                        existingTooltip.remove();
+                    }
+                    
+                    // Create new tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'description-tooltip';
+                    tooltip.textContent = description;
+                    document.body.appendChild(tooltip);
+                    
+                    // Position tooltip
+                    const rect = row.getBoundingClientRect();
+                    tooltip.style.left = rect.left + 'px';
+                    tooltip.style.top = (rect.bottom + 5) + 'px';
+                }
+            });
+
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.closest('.product-row')) {
+                    const tooltip = document.querySelector('.description-tooltip');
+                    if (tooltip) {
+                        tooltip.remove();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

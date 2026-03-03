@@ -1,0 +1,399 @@
+/* ===== General Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+/* ===== Header Section ===== */
+.header-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 0;
+}
+
+.header-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.header-section i {
+    font-size: 2.2rem;
+    margin-right: 15px;
+}
+
+/* ===== Control Panel ===== */
+.control-panel {
+    border: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+    animation: fadeInUp 0.8s ease-out;
+    background: white;
+}
+
+.control-panel .card-body {
+    padding: 25px;
+}
+
+.search-input {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    transform: translateY(-2px);
+}
+
+.form-select {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-label {
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.form-label i {
+    color: #667eea;
+    margin-right: 5px;
+}
+
+/* ===== Table Card ===== */
+.table-card {
+    border: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+    animation: fadeInUp 0.9s ease-out;
+    background: white;
+}
+
+.table-card .card-body {
+    padding: 0;
+}
+
+/* ===== Table Styles ===== */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.table thead th {
+    border: none;
+    padding: 18px 15px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+}
+
+.table thead th:first-child {
+    border-top-left-radius: 15px;
+}
+
+.table thead th:last-child {
+    border-top-right-radius: 15px;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-color: #f0f0f0;
+    color: #333;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.15);
+}
+
+.product-title {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.price-cell {
+    font-weight: 700;
+    color: #667eea;
+    font-size: 1.1rem;
+}
+
+/* ===== Sort Button ===== */
+.btn-sort {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 4px 8px;
+    margin-left: 8px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-sort:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-sort i {
+    font-size: 0.9rem;
+}
+
+/* ===== Description Tooltip ===== */
+.description-tooltip {
+    position: fixed;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 500px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease;
+    pointer-events: none;
+}
+
+.description-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #667eea;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+    gap: 8px;
+}
+
+.page-item .page-link {
+    border: 2px solid #e0e0e0;
+    color: #667eea;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 0 3px;
+}
+
+.page-item .page-link:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+}
+
+.page-item.disabled .page-link {
+    background: #f8f9fa;
+    border-color: #e0e0e0;
+    color: #999;
+}
+
+/* ===== Results Badge ===== */
+.badge {
+    padding: 12px 25px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.bg-info {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* ===== Loading Spinner ===== */
+#loadingSpinner {
+    color: white;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+}
+
+#loadingSpinner p {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .header-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .header-section i {
+        font-size: 1.6rem;
+    }
+
+    .control-panel .card-body {
+        padding: 20px;
+    }
+
+    .table thead th {
+        font-size: 0.85rem;
+        padding: 12px 8px;
+    }
+
+    .table tbody td {
+        font-size: 0.85rem;
+        padding: 10px 8px;
+    }
+
+    .product-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .description-tooltip {
+        max-width: 90%;
+        font-size: 0.85rem;
+    }
+
+    .page-item .page-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-section {
+        padding: 25px 0;
+    }
+
+    .header-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .control-panel .row > div {
+        margin-bottom: 15px;
+    }
+
+    .table {
+        font-size: 0.8rem;
+    }
+
+    .product-image {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
